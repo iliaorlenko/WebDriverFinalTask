@@ -1,7 +1,6 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
 using WebDriverFinalTask.Base;
-using WebDriverFinalTask.DataProvider;
+using WebDriverFinalTask.TestData;
 
 namespace WebDriverFinalTask.Pages
 {
@@ -58,7 +57,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
-        public MailPage PopulateAddressee(string addressee)
+        public MailPage PopulateEmailAddressee(string addressee)
         {
             EmailAddresseeTextbox.SendKeys(addressee);
             return this;
@@ -92,6 +91,12 @@ namespace WebDriverFinalTask.Pages
         {
             ExpandCategoryPanel();
             SentEmailsCategory.Click();
+
+            return this;
+        }
+
+        public MailPage GetLastSentEmailBody()
+        {
 
             return this;
         }

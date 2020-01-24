@@ -1,9 +1,6 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using System;
-using System.Collections;
-using System.Linq;
-using WebDriverFinalTask.DataProvider;
 
 namespace WebDriverFinalTask.Base
 {

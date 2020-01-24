@@ -1,12 +1,12 @@
 ﻿using NUnit.Framework;
 using WebDriverFinalTask.Base;
 using WebDriverFinalTask.Pages;
+using WebDriverFinalTask.TestData;
 
 namespace WebDriverFinalTask.Tests
 {
     [TestFixture(BrowserName.Chrome)]
     [TestFixture(BrowserName.Firefox)]
-    //[TestFixtureSource(typeof(TestBase), nameof(EmailTestData))]
     [Parallelizable(ParallelScope.Fixtures)]
     public class MailTests : TestBase
     {
@@ -22,43 +22,44 @@ namespace WebDriverFinalTask.Tests
         [SetUp]
         public void Setup()
         {
-            //DataProvider.DataProvider.GetTestCaseData(TestContext.CurrentContext);
+
         }
 
         [Test]
-        //, TestCaseSource(typeof(DataProvider.DataProvider), nameof(DataProvider.DataProvider.EmailTestData))]
-        public void VerifyEmailIsSent(string userEmail1, string password1, string userEmail2, string password2, string emailBody, string emailSubject)
+        [TestCase("jd5890662", @",=zso:a[u<,\=\;u", "jb3720380@gmail.com")]
+        public void VerifyEmailIsSent(string username, string password, string addresseeEmail)
         {
             mailPage = new LoginPage(driver)
-                .LoginToGmail(userEmail1, password1)
+                .LoginToGmail(username, password)
                 .StartNewEmail()
-                .PopulateAddressee(userEmail2)
+                .PopulateEmailAddressee(addresseeEmail)
                 .PopulateEmailSubject()
                 .PopulateEmailBody()
                 .SendEmail()
                 .OpenSentEmails();
 
-            System.Threading.Thread.Sleep(10000);
-            Assert.True(mailPage.SentEmailSubject.Text == DataProvider.CurrentValues.EmailSubject && mailPage.SentEmailBody.Text == DataProvider.CurrentValues.EmailBody);
+            //System.Threading.Thread.Sleep(2000);
+            StringAssert.Contains(CurrentValues.EmailSubject, mailPage.SentEmailSubject.Text);
+            StringAssert.Contains(CurrentValues.EmailBody, mailPage.SentEmailBody.Text);
         }
 
         [Test]
-        //, TestCaseSource(typeof(DataProvider.DataProvider), nameof(DataProvider.DataProvider.EmailTestData))]
-        public void VerifySentEmailPutToSentFolder(string userEmail1, string password1, string userEmail2, string password2, string emailBody, string emailSubject)
+        [TestCase("jd5890662", @",=zso:a[u<,\=\;u")]
+        public void VerifySentEmailPutToSentFolder(string username, string password)
         {
             mailPage = new LoginPage(driver)
-                   .LoginToGmail(userEmail1, password1);
+                   .LoginToGmail(username, password);
 
         }
 
         [Test]
-        //[TestCaseSource(typeof(TestBase), nameof(EmailTestData))]
-        public void VerifyDeleteEmail(string userEmail1, string password1, string userEmail2, string password2, string emailBody, string emailSubject)
+        [TestCase("jd5890662", @",=zso:a[u<,\=\;u")]
+        public void VerifyDeleteEmail(string username, string password)
         {
             new LoginPage(driver)
-                .SetUserEmail(userEmail1)
+                .SetUserEmail(username)
                 .SubmitUserEmail()
-                .SetPassword(password1)
+                .SetPassword(password)
                 .SubmitPassword()
                 .ExpandCategoryPanel();
         }

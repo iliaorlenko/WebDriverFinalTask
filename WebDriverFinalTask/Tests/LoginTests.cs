@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System.Collections;
 using WebDriverFinalTask.Base;
 using WebDriverFinalTask.Pages;
 
@@ -11,18 +10,19 @@ namespace WebDriverFinalTask.Tests
     public class LoginTests : TestBase
     {
         LoginPage loginPage;
-        //IEnumerable a;
 
         [OneTimeSetUp]
         public void SetupFixture()
         {
-            //a = DataProvider.DataProvider.GetTestCaseData();
             loginPage = new LoginPage(driver);
         }
 
         public LoginTests(BrowserName browser) : base(browser) { }
 
-        [Test, TestCaseSource(typeof(DataProvider.DataProvider), nameof(DataProvider.DataProvider.LoginTestData))]
+        [Test]
+        [TestCase("jd5890662", @",=zso:a[u<,\=\;u")]
+        [TestCase("jb3720380", @"Z;uNa>]}M6yZdMc+")]
+        [TestCase("janesimmons981", "Yu3'nk^t@%d*U48\"")]
         public void VerifyLoginWithValidCredentials(string username, string password)
         {
 
@@ -37,7 +37,9 @@ namespace WebDriverFinalTask.Tests
         }
 
         [Test]
-        //, TestCaseSource(typeof(DataProvider.DataProvider), nameof(DataProvider.DataProvider.GetTestCaseData))]
+        [TestCase("jd5890662", @",=zso:a[u<,\=\;u")]
+        [TestCase("jb3720380", @"Z;uNa>]}M6yZdMc+")]
+        [TestCase("janesimmons981", "Yu3'nk^t@%d*U48\"")]
         public void VerifyLogout(string username, string password)
         {
             loginPage.LoginToGmail(username, password)

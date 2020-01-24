@@ -92,4 +92,3 @@ C:\Users\ilyaorlenko\source\repos\WebDriverFinalTask\WebDriverFinalTask\bin\Debu
 C:\Users\ilyaorlenko\source\repos\WebDriverFinalTask\WebDriverFinalTask\bin\Debug\netcoreapp3.1\WebDriver.dll
 C:\Users\ilyaorlenko\source\repos\WebDriverFinalTask\WebDriverFinalTask\obj\Debug\netcoreapp3.1\WebDriverFinalTask.dll
 C:\Users\ilyaorlenko\source\repos\WebDriverFinalTask\WebDriverFinalTask\obj\Debug\netcoreapp3.1\WebDriverFinalTask.pdb
-C:\Users\ilyaorlenko\source\repos\WebDriverFinalTask\WebDriverFinalTask\bin\Debug\netcoreapp3.1\DataProvider\TestData.json
