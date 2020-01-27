@@ -9,10 +9,11 @@
     "Key": "secretkey",
     "Uri": "http://{0}:{1}@hub-cloud.browserstack.com/wd/hub/"
   },
-  "Grid": "http://localhost",
-  "VmNode": "http://172.17.0.1",
+  "LocalGrid": "http://localhost",
+  "RemoteGrid": "http://172.17.0.1",
   "ChromePort": "5551",
   "FirefoxPort": "5552",
   "GmailUrl": "https://mail.google.com/",
-  "GmailLogoutUrl": "https://accounts.google.com/Logout"
+  "GmailLogoutUrl": "https://accounts.google.com/Logout",
+  "ScreenshotFolder":  "C:\\SeleniumScreenshots\\"
 }

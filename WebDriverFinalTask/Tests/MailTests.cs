@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Allure.NUnit.Attributes;
+using NUnit.Framework;
 using WebDriverFinalTask.Base;
 using WebDriverFinalTask.Pages;
 using WebDriverFinalTask.TestData;
@@ -12,25 +13,32 @@ namespace WebDriverFinalTask.Tests
     {
         MailPage mailPage;
 
-        public MailTests(BrowserName Browser) : base(Browser) { }
+        public MailTests(BrowserName browser) : base(browser) { }
 
-        [OneTimeSetUp]
-        public void SetupFixture()
-        {
-            
-        }
         [SetUp]
-        public void Setup()
+        public void TestSetUp()
         {
+            mailPage = new LoginPage(Driver).LoginToGmail("jd5890662", @",=zso:a[u<,\=\;u");
+        }
 
+        [TearDown]
+        public void TestTearDown()
+        {
+            mailPage.Logout().ChangeAccount();
         }
 
         [Test]
-        [TestCase("jd5890662", @",=zso:a[u<,\=\;u", "jb3720380@gmail.com")]
-        public void VerifyEmailIsSent(string username, string password, string addresseeEmail)
+        [TestCase("jb3720380@gmail.com")]
+        [
+            AllureSubSuite("Mail functionality tests"),
+            AllureSeverity(Allure.Commons.Model.SeverityLevel.Blocker),
+            AllureLink("ID-1"),
+            AllureTest("Verify email is sent"),
+            AllureOwner("Ilya Orlenko"),
+        ]
+        public void VerifyEmailIsSent(string addresseeEmail)
         {
-            mailPage = new LoginPage(driver)
-                .LoginToGmail(username, password)
+            mailPage
                 .StartNewEmail()
                 .PopulateEmailAddressee(addresseeEmail)
                 .PopulateEmailSubject()
@@ -38,30 +46,49 @@ namespace WebDriverFinalTask.Tests
                 .SendEmail()
                 .OpenSentEmails();
 
-            //System.Threading.Thread.Sleep(2000);
+            System.Threading.Thread.Sleep(3000);
             StringAssert.Contains(CurrentValues.EmailSubject, mailPage.SentEmailSubject.Text);
             StringAssert.Contains(CurrentValues.EmailBody, mailPage.SentEmailBody.Text);
         }
 
         [Test]
-        [TestCase("jd5890662", @",=zso:a[u<,\=\;u")]
-        public void VerifySentEmailPutToSentFolder(string username, string password)
+        [TestCase("jb3720380@gmail.com")]
+        [
+            AllureSubSuite("Mail functionality tests"),
+            AllureSeverity(Allure.Commons.Model.SeverityLevel.Blocker),
+            AllureLink("ID-1"),
+            AllureTest("Verify sent email put to sent folder"),
+            AllureOwner("Ilya Orlenko"),
+        ]
+        public void VerifySentEmailPutToSentFolder(string addresseeEmail)
         {
-            mailPage = new LoginPage(driver)
-                   .LoginToGmail(username, password);
+            mailPage
+                .StartNewEmail()
+                .PopulateEmailAddressee(addresseeEmail)
+                .PopulateEmailSubject()
+                .PopulateEmailBody()
+                .SendEmail()
+                .OpenSentEmails();
 
         }
 
         [Test]
-        [TestCase("jd5890662", @",=zso:a[u<,\=\;u")]
-        public void VerifyDeleteEmail(string username, string password)
+        [TestCase("jb3720380@gmail.com")]
+        [
+            AllureSubSuite("Mail functionality tests"),
+            AllureSeverity(Allure.Commons.Model.SeverityLevel.Blocker),
+            AllureLink("ID-1"),
+            AllureTest("Verify deleted email put to trash folder"),
+            AllureOwner("Ilya Orlenko"),
+        ]
+        public void VerifyDeleteEmail(string addresseeEmail)
         {
-            new LoginPage(driver)
-                .SetUserEmail(username)
-                .SubmitUserEmail()
-                .SetPassword(password)
-                .SubmitPassword()
-                .ExpandCategoryPanel();
+            mailPage
+                .StartNewEmail()
+                .PopulateEmailAddressee(addresseeEmail)
+                .PopulateEmailSubject()
+                .PopulateEmailBody()
+                .SendEmail();
         }
     }
 }

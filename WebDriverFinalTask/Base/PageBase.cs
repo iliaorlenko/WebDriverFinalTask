@@ -42,6 +42,7 @@ namespace WebDriverFinalTask.Base
             return new LoginPage(driver);
         }
 
+
         // Wait and get element
         public IWebElement WaitFindElement(By locator)
         {
@@ -49,10 +50,10 @@ namespace WebDriverFinalTask.Base
             IWebElement ExpectedElement = null;
 
             // Initialize instance of explicit wait 
-            WebDriverWait Wait = new WebDriverWait(driver, TimeSpan.FromSeconds(11));
+            WebDriverWait Wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
 
             // Set custom polling interval
-            Wait.PollingInterval = TimeSpan.FromMilliseconds(200);
+            //Wait.PollingInterval = TimeSpan.FromMilliseconds(200);
 
             // Set condition for explicit wait
             Wait.Until(condition =>
@@ -82,7 +83,6 @@ namespace WebDriverFinalTask.Base
             // Return expected element
             return ExpectedElement;
         }
-
     }
 }
 

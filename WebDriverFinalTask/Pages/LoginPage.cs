@@ -44,5 +44,18 @@ namespace WebDriverFinalTask.Pages
                 .SetPassword(password)
                 .SubmitPassword();
         }
+
+        //public LoginPage Logout()
+        //{
+        //    OpenAccountPanel();
+        //    LogoutButton.JsClick(driver);
+        //    return this;
+        //}
+
+        //public LoginPage ChangeAccount()
+        //{
+        //    ChangeAccountButton.JsClick(driver);
+        //    return this;
+        //}
     }
 }

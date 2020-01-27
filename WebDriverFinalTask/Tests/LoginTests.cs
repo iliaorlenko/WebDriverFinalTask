@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Allure.NUnit.Attributes;
+using NUnit.Framework;
 using WebDriverFinalTask.Base;
 using WebDriverFinalTask.Pages;
 
@@ -9,20 +10,27 @@ namespace WebDriverFinalTask.Tests
     [Parallelizable(ParallelScope.Fixtures)]
     public class LoginTests : TestBase
     {
+        public LoginTests(BrowserName browser) : base(browser) { }
+
         LoginPage loginPage;
 
         [OneTimeSetUp]
         public void SetupFixture()
         {
-            loginPage = new LoginPage(driver);
+            loginPage = new LoginPage(Driver);
         }
-
-        public LoginTests(BrowserName browser) : base(browser) { }
 
         [Test]
         [TestCase("jd5890662", @",=zso:a[u<,\=\;u")]
         [TestCase("jb3720380", @"Z;uNa>]}M6yZdMc+")]
         [TestCase("janesimmons981", "Yu3'nk^t@%d*U48\"")]
+        [
+            AllureSubSuite("Login functionality tests"),
+            AllureSeverity(Allure.Commons.Model.SeverityLevel.Blocker),
+            AllureLink("ID-1"),
+            AllureTest("Verify login with valid credentials"),
+            AllureOwner("Ilya Orlenko"),
+        ]
         public void VerifyLoginWithValidCredentials(string username, string password)
         {
 
@@ -33,13 +41,20 @@ namespace WebDriverFinalTask.Tests
 
             Assert.True(loginPage.AccountPanelButton.Displayed, $"The page does not contain AccountPanelButton element.");
 
-            loginPage.Logout();
+            //loginPage.Logout();
         }
 
         [Test]
         [TestCase("jd5890662", @",=zso:a[u<,\=\;u")]
         [TestCase("jb3720380", @"Z;uNa>]}M6yZdMc+")]
         [TestCase("janesimmons981", "Yu3'nk^t@%d*U48\"")]
+        [
+            AllureSubSuite("Login functionality tests"),
+            AllureSeverity(Allure.Commons.Model.SeverityLevel.Blocker),
+            AllureLink("ID-2"),
+            AllureTest("Verify logout"),
+            AllureOwner("Ilya Orlenko"),
+        ]
         public void VerifyLogout(string username, string password)
         {
             loginPage.LoginToGmail(username, password)
@@ -51,9 +66,9 @@ namespace WebDriverFinalTask.Tests
         }
 
         [TearDown]
-        public void TeardownTest()
+        public void TestTearDown()
         {
-            loginPage.ChangeAccount();
+            //loginPage.ChangeAccount();
         }
     }
 }

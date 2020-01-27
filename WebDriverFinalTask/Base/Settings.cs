@@ -6,34 +6,38 @@ namespace WebDriverFinalTask.Base
 {
     public static class Settings
     {
-        // Path to bin/Debug folder
+        // Path to project folder
         public static string baseDir = Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetParent(AppContext.BaseDirectory).ToString()).ToString()).ToString()).ToString();
 
         // Deserialized FrameworkConfig.json
         private static Configuration Config = JsonConvert.DeserializeObject<Configuration>(new StreamReader(baseDir + "/FrameworkConfig.json").ReadToEnd());
-        public static string Grid => Config.Grid;
+
+        public static Uri BrowserStackUri => new Uri($"http://{Config.BrowserStack.User}:{Config.BrowserStack.Key}@hub-cloud.browserstack.com/wd/hub/");
+        public static string LocalGrid => Config.LocalGrid;
+        public static string RemoteGrid => Config.RemoteGrid;
         public static string ChromePort => Config.ChromePort;
         public static string FirefoxPort => Config.FirefoxPort;
         public static string GmailLoginPageUrl => Config.GmailUrl;
+        public static string ScreenshotPath => Config.ScreenshotFolder;
 
-        public static Environment? env = null;
-        public static Uri HubUri
-        {
-            get
-            {
-                switch (env)
-                {
-                    case Environment.BrowserStack:
-                        return new Uri(string.Format(Config.BrowserStack.Uri, Config.BrowserStack.User, Config.BrowserStack.Key));
-                    case Environment.SauceLabs:
-                        return new Uri(string.Format(Config.SauceLabs.Uri, Config.SauceLabs.User, Config.SauceLabs.Key));
-                    case Environment.VM:
-                        return new Uri(Config.VmNode);
-                    default:
-                        return null;
-                }
-            }
-        }
+        //public static Environment? env = null;
+        //public static Uri HubUri
+        //{
+        //    get
+        //    {
+        //        switch (env)
+        //        {
+        //            case Environment.LocalGrid:
+        //                return new Uri(Config.LocalGrid);
+        //            case Environment.RemoteGrid:
+        //                return new Uri(Config.RemoteGrid);
+        //            case Environment.BrowserStack:
+        //                return new Uri(string.Format(Config.BrowserStack.Uri, Config.BrowserStack.User, Config.BrowserStack.Key));
+        //            default:
+        //                return null;
+        //        }
+        //    }
+        //}
 
         private class Configuration
         {
@@ -43,11 +47,11 @@ namespace WebDriverFinalTask.Base
             [JsonProperty("SauceLabsSettings")]
             public SauceLabs SauceLabs { get; set; }
 
-            [JsonProperty("Grid")]
-            public string Grid { get; set; }
+            [JsonProperty("LocalGrid")]
+            public string LocalGrid { get; set; }
 
-            [JsonProperty("VmNode")]
-            public string VmNode { get; set; }
+            [JsonProperty("RemoteGrid")]
+            public string RemoteGrid { get; set; }
 
             [JsonProperty("ChromePort")]
             public string ChromePort { get; set; }
@@ -57,6 +61,9 @@ namespace WebDriverFinalTask.Base
 
             [JsonProperty("GmailUrl")]
             public string GmailUrl { get; set; }
+
+            [JsonProperty("ScreenshotFolder")]
+            public string ScreenshotFolder { get; set; }
         }
 
         private class BrowserStack
@@ -95,8 +102,8 @@ namespace WebDriverFinalTask.Base
     public enum Environment
     {
         Local,
-        VM,
-        SauceLabs,
+        LocalGrid,
+        RemoteGrid,
         BrowserStack
     }
 
