@@ -2,6 +2,7 @@
 using Allure.Commons.Model;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Html5;
 using OpenQA.Selenium.Remote;
 using System;
 using System.IO;
@@ -10,10 +11,13 @@ namespace WebDriverFinalTask.Base
 {
     public class TestBase : DriverContext
     {
+        BrowserName currentBrowser;
+
         protected RemoteWebDriver Driver { get; set; }
 
         public TestBase(BrowserName browser)
         {
+            currentBrowser = browser;
             SetupDriver(browser);
         }
 
@@ -28,22 +32,14 @@ namespace WebDriverFinalTask.Base
         [OneTimeSetUp]
         public void GlobalFixturesSetUp()
         {
-            string environment = TestContext.Parameters.Get("env", "LocalGrid");
-            string browserName = TestContext.Parameters.Get("browser", "Chrome");
+            string env = TestContext.Parameters.Get("env");
+            selectedEnvironment = (Environment)Enum.Parse(typeof(Environment), env, true);
         }
 
         [SetUp]
         public void GlobalTestsSetUp()
         {
-            RemoteSessionStorage remoteSessionStorage = new RemoteSessionStorage(Driver);
-            
-            //remoteSessionStorage.Clear();
-            //if (Driver.HasWebStorage)
-            //{
-            //Driver.Manage().Cookies.DeleteAllCookies();
-            //Driver.WebStorage.LocalStorage.Clear();
-            //Driver.WebStorage.SessionStorage.Clear();
-            //}
+
         }
 
         [TearDown]
@@ -62,6 +58,7 @@ namespace WebDriverFinalTask.Base
                     ((ITakesScreenshot)Driver).GetScreenshot().AsByteArray);
 
                 Driver.Quit();
+                SetupDriver(currentBrowser);
             }
         }
 

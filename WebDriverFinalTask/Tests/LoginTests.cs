@@ -1,5 +1,8 @@
 ﻿using Allure.NUnit.Attributes;
 using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Html5;
+using OpenQA.Selenium.Remote;
 using WebDriverFinalTask.Base;
 using WebDriverFinalTask.Pages;
 
@@ -14,8 +17,8 @@ namespace WebDriverFinalTask.Tests
 
         LoginPage loginPage;
 
-        [OneTimeSetUp]
-        public void SetupFixture()
+        [SetUp]
+        public void SetUpTest()
         {
             loginPage = new LoginPage(Driver);
         }
@@ -41,7 +44,7 @@ namespace WebDriverFinalTask.Tests
 
             Assert.True(loginPage.AccountPanelButton.Displayed, $"The page does not contain AccountPanelButton element.");
 
-            //loginPage.Logout();
+            loginPage.Logout();
         }
 
         [Test]
@@ -68,7 +71,7 @@ namespace WebDriverFinalTask.Tests
         [TearDown]
         public void TestTearDown()
         {
-            //loginPage.ChangeAccount();
+            loginPage.ChangeAccount();
         }
     }
 }
