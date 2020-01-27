@@ -30,7 +30,7 @@ namespace WebDriverFinalTask.Base
             chromeOpts.AddArgument("--disable-dev-shm-usage");
             chromeOpts.AddArgument("--disable-gpu");
             chromeOpts.AddArgument("--no-sandbox");
-            chromeOpts.UseSpecCompliantProtocol = true;
+            //chromeOpts.UseSpecCompliantProtocol = true;
             chromeOpts.UnhandledPromptBehavior = UnhandledPromptBehavior.Accept;
 
             // If environment == local, return new driver and finish driver setup

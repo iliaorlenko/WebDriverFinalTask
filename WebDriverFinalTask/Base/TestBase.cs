@@ -36,12 +36,13 @@ namespace WebDriverFinalTask.Base
         public void GlobalTestsSetUp()
         {
             RemoteSessionStorage remoteSessionStorage = new RemoteSessionStorage(Driver);
-            remoteSessionStorage.Clear();
+            
+            //remoteSessionStorage.Clear();
             //if (Driver.HasWebStorage)
             //{
             //Driver.Manage().Cookies.DeleteAllCookies();
-            Driver.WebStorage.LocalStorage.Clear();
-            Driver.WebStorage.SessionStorage.Clear();
+            //Driver.WebStorage.LocalStorage.Clear();
+            //Driver.WebStorage.SessionStorage.Clear();
             //}
         }
 
