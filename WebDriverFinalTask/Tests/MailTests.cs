@@ -18,7 +18,8 @@ namespace WebDriverFinalTask.Tests
         [SetUp]
         public void TestSetUp()
         {
-            mailPage = new LoginPage(Driver).LoginToGmail("jd5890662", @",=zso:a[u<,\=\;u");
+            mailPage = new LoginPage(Driver)
+                .LoginToGmail("jd5890662", @",=zso:a[u<,\=\;u");
         }
 
         [TearDown]
@@ -41,14 +42,13 @@ namespace WebDriverFinalTask.Tests
             mailPage
                 .StartNewEmail()
                 .PopulateEmailAddressee(addresseeEmail)
-                .PopulateEmailSubject()
-                .PopulateEmailBody()
-                .SendEmail()
+                .PopulateEmailSubject(StringGenerator.GenerateString(20))
+                .PopulateEmailBody(StringGenerator.GenerateString(50))
+                .ClickSendEmailButton()
                 .OpenSentEmails();
 
-            System.Threading.Thread.Sleep(3000);
-            StringAssert.Contains(CurrentValues.EmailSubject, mailPage.SentEmailSubject.Text);
-            StringAssert.Contains(CurrentValues.EmailBody, mailPage.SentEmailBody.Text);
+            StringAssert.Contains(mailPage.AssertionValues.SentEmailSubject, mailPage.LastMessageSubjectLabel.Text);
+            StringAssert.Contains(mailPage.AssertionValues.SentEmailBody, mailPage.LastMessageBodyLabel.Text);
         }
 
         [Test]
@@ -65,11 +65,11 @@ namespace WebDriverFinalTask.Tests
             mailPage
                 .StartNewEmail()
                 .PopulateEmailAddressee(addresseeEmail)
-                .PopulateEmailSubject()
-                .PopulateEmailBody()
-                .SendEmail()
+                .PopulateEmailSubject(StringGenerator.GenerateString(20))
+                .PopulateEmailBody(StringGenerator.GenerateString(50))
+                .ClickSendEmailButton()
                 .OpenSentEmails();
-
+            
         }
 
         [Test]
@@ -84,11 +84,17 @@ namespace WebDriverFinalTask.Tests
         public void VerifyDeleteEmail(string addresseeEmail)
         {
             mailPage
-                .StartNewEmail()
-                .PopulateEmailAddressee(addresseeEmail)
-                .PopulateEmailSubject()
-                .PopulateEmailBody()
-                .SendEmail();
+                .SendEmail(addresseeEmail, StringGenerator.GenerateString(20), StringGenerator.GenerateString(50))
+                .Logout()
+                .ChangeAccount()
+                .LoginToGmail(addresseeEmail, @"Z;uNa>]}M6yZdMc+")
+                .StoreLastReceivedEmailData()
+                .DeleteLastReceivedEmail()
+                .OpenTrashBin();
+
+            StringAssert.Contains(mailPage.AssertionValues.LastReceivedEmailSubject, mailPage.LastMessageSubjectLabel.Text);
+            StringAssert.Contains(mailPage.AssertionValues.LastReceivedEmailBody, mailPage.LastMessageBodyLabel.Text);
+
         }
     }
 }

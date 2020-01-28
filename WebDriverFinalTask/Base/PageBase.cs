@@ -3,13 +3,14 @@ using OpenQA.Selenium.Support.UI;
 using System;
 using System.Diagnostics;
 using WebDriverFinalTask.Pages;
+using WebDriverFinalTask.TestData;
 
 namespace WebDriverFinalTask.Base
 {
     public class PageBase
     {
         protected IWebDriver driver;
-
+        public AssertionValues AssertionValues { get; set; }
         public PageBase(IWebDriver driver) { this.driver = driver; }
 
         public IWebElement LogoutButton => WaitFindElement(By.XPath("//a[@id='gb_71']"));
@@ -26,6 +27,13 @@ namespace WebDriverFinalTask.Base
         public MailPage ClickLogoutButton()
         {
             LogoutButton.JsClick(driver);
+            return new MailPage(driver);
+        }
+        public MailPage GoToMailSection()
+        {
+            //WaitFindElement(By.XPath("//a[@aria-label='Приложения Google']")).JsClick(driver);
+            WaitFindElement(By.XPath("//a[@title='Настройки аккаунта Google']"));
+            driver.Url = @"https://mail.google.com";
             return new MailPage(driver);
         }
 

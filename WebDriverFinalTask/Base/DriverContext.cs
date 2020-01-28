@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Html5;
 using OpenQA.Selenium.Remote;
 using System;
 
@@ -9,10 +10,11 @@ namespace WebDriverFinalTask.Base
 {
     public class DriverContext : AllureReport
     {
-        protected Environment selectedEnvironment = Environment.BrowserStack;
+        protected Environment selectedEnvironment = Environment.LocalGrid;
 
         public RemoteWebDriver GetDriver(BrowserName browser)
         {
+
             RemoteWebDriver Driver = null;
 
             string GridEnvironment = null;
@@ -27,9 +29,8 @@ namespace WebDriverFinalTask.Base
             //chromeOpts.AddArgument("--no-sandbox");
             chromeOpts.UnhandledPromptBehavior = UnhandledPromptBehavior.Accept;
             //chromeOpts.AddAdditionalCapability("w3c", false);
-            //chromeOpts.UseSpecCompliantProtocol = false;
+            chromeOpts.UseSpecCompliantProtocol = false;
             //chromeOpts.AddAdditionalCapability("supportsWebStorage", CapabilityType.SupportsWebStorage);
-            //chromeOpts.AddAdditionalCapability(CapabilityType.SupportsWebStorage, true);
 
 
             // If environment == local, return new driver and finish driver setup

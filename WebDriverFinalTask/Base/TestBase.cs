@@ -5,7 +5,10 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Html5;
 using OpenQA.Selenium.Remote;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using WebDriverFinalTask.Pages;
+using WebDriverFinalTask.TestData;
 
 namespace WebDriverFinalTask.Base
 {
@@ -26,13 +29,13 @@ namespace WebDriverFinalTask.Base
             Driver = GetDriver(browser);
             Driver.Url = Settings.GmailLoginPageUrl;
             Driver.Manage().Window.Maximize();
-            Driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
+            Driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
         }
 
         [OneTimeSetUp]
         public void GlobalFixturesSetUp()
         {
-            string env = TestContext.Parameters.Get("env");
+            string env = TestContext.Parameters.Get("env", "LocalGrid");
             selectedEnvironment = (Environment)Enum.Parse(typeof(Environment), env, true);
         }
 
@@ -65,6 +68,29 @@ namespace WebDriverFinalTask.Base
         [OneTimeTearDown]
         public void GlobalFixturesTearDown()
         {
+
+            //List<KeyValuePair<string, string>> allTestAccounts = new List<KeyValuePair<string, string>>()
+            //{
+            //    new KeyValuePair<string, string>("jd5890662", @",=zso:a[u<,\=\;u"),
+            //    new KeyValuePair<string, string>("jb3720380", "Z;uNa>]}M6yZdMc+"),
+            //    new KeyValuePair<string, string>("janesimmons981", "Yu3'nk^t@%d*U48")
+            //};
+
+            //LoginPage loginPage = new LoginPage(Driver);
+
+            //foreach(KeyValuePair<string, string>account in allTestAccounts)
+            //{
+
+            //    loginPage
+            //        .LoginToGmail(account.Key, account.Value)
+            //        .RemoveAllMessages()
+            //        .OpenSentEmails()
+            //        .RemoveAllMessages()
+            //        .RemoveAllMessagesFromTrashBin()
+            //        .Logout()
+            //        .ChangeAccount();
+            //}
+
             Driver.Quit();
         }
 
@@ -80,5 +106,13 @@ namespace WebDriverFinalTask.Base
 
             screenshot.SaveAsFile(dirName + fileName);
         }
+
+        //public void ClearSessionStorage()
+        //{
+        //    IJavaScriptExecutor executor = Driver;
+        //    var sessionStorage = executor.ExecuteScript("return sessionStorage.getItem('key')");
+        //    for(int i = 0; i < )
+        //}
+
     }
 }
