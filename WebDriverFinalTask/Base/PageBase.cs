@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using WebDriverFinalTask.Pages;
 using WebDriverFinalTask.TestData;
@@ -9,9 +10,8 @@ namespace WebDriverFinalTask.Base
 {
     public class PageBase
     {
-        protected IWebDriver driver;
-        public AssertionValues AssertionValues { get; set; }
-        public PageBase(IWebDriver driver) { this.driver = driver; }
+        protected IWebDriver Driver;
+        public PageBase(IWebDriver Driver) { this.Driver = Driver; }
 
         public IWebElement LogoutButton => WaitFindElement(By.XPath("//a[@id='gb_71']"));
         public IWebElement SelectAccountPanelHeading => WaitFindElement(By.XPath("//span[contains(text(), 'Выберите аккаунт')]"));
@@ -20,36 +20,33 @@ namespace WebDriverFinalTask.Base
 
         public MailPage OpenAccountPanel()
         {
-            AccountPanelButton.JsClick(driver);
-            return new MailPage(driver);
+            AccountPanelButton.JsClick(Driver);
+
+            return new MailPage(Driver);
         }
 
         public MailPage ClickLogoutButton()
         {
-            LogoutButton.JsClick(driver);
-            return new MailPage(driver);
-        }
-        public MailPage GoToMailSection()
-        {
-            //WaitFindElement(By.XPath("//a[@aria-label='Приложения Google']")).JsClick(driver);
-            WaitFindElement(By.XPath("//a[@title='Настройки аккаунта Google']"));
-            driver.Url = @"https://mail.google.com";
-            return new MailPage(driver);
+            LogoutButton.JsClick(Driver);
+
+            return new MailPage(Driver);
         }
 
         public LoginPage Logout()
         {
             OpenAccountPanel();
-            LogoutButton.JsClick(driver);
-            return new LoginPage(driver);
+
+            LogoutButton.JsClick(Driver);
+
+            return new LoginPage(Driver);
         }
 
         public LoginPage ChangeAccount()
         {
-            ChangeAccountButton.JsClick(driver);
-            return new LoginPage(driver);
-        }
+            ChangeAccountButton.JsClick(Driver);
 
+            return new LoginPage(Driver);
+        }
 
         // Wait and get element
         public IWebElement WaitFindElement(By locator)
@@ -58,17 +55,17 @@ namespace WebDriverFinalTask.Base
             IWebElement ExpectedElement = null;
 
             // Initialize instance of explicit wait 
-            WebDriverWait Wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+            WebDriverWait Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(15));
 
             // Set custom polling interval
-            //Wait.PollingInterval = TimeSpan.FromMilliseconds(200);
+            Wait.PollingInterval = TimeSpan.FromMilliseconds(200);
 
             // Set condition for explicit wait
             Wait.Until(condition =>
             {
                 try
                 {
-                    ExpectedElement = driver.FindElement(locator);
+                    ExpectedElement = Driver.FindElement(locator);
 
                     if (ExpectedElement.Displayed && ExpectedElement.Enabled)
                     {
@@ -88,8 +85,21 @@ namespace WebDriverFinalTask.Base
                     return false;
                 }
             });
+
             // Return expected element
             return ExpectedElement;
+        }
+        public bool IsElementExists(By locator)
+        {
+            try
+            {
+                Driver.FindElement(locator);
+            }
+            catch (NoSuchElementException e)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

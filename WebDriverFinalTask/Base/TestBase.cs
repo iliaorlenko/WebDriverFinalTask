@@ -16,10 +16,12 @@ namespace WebDriverFinalTask.Base
     {
         BrowserName currentBrowser;
 
-        protected RemoteWebDriver Driver { get; set; }
+        protected IWebDriver Driver { get; set; }
 
         public TestBase(BrowserName browser)
         {
+            string env = TestContext.Parameters.Get("env", "Local");
+            selectedEnvironment = (Environment)Enum.Parse(typeof(Environment), env, true);
             currentBrowser = browser;
             SetupDriver(browser);
         }
@@ -35,14 +37,11 @@ namespace WebDriverFinalTask.Base
         [OneTimeSetUp]
         public void GlobalFixturesSetUp()
         {
-            string env = TestContext.Parameters.Get("env", "LocalGrid");
-            selectedEnvironment = (Environment)Enum.Parse(typeof(Environment), env, true);
         }
 
         [SetUp]
         public void GlobalTestsSetUp()
         {
-
         }
 
         [TearDown]
@@ -50,9 +49,10 @@ namespace WebDriverFinalTask.Base
         {
             if (TestContext.CurrentContext.Result.Outcome.Status == NUnit.Framework.Interfaces.TestStatus.Failed)
             {
+                ICapabilities capabilities = ((RemoteWebDriver)Driver).Capabilities;
                 AllureLifecycle.Instance.UpdateTestCase(x => x.descriptionHtml += $"<p>Date/Time: {DateTime.Now}</p>");
-                AllureLifecycle.Instance.UpdateTestCase(x => x.descriptionHtml += $"<p>Browser: {Driver.Capabilities["browserName"]}</p>");
-                AllureLifecycle.Instance.UpdateTestCase(x => x.descriptionHtml += $"<p>Platform: {Driver.Capabilities["platformName"]}</p>");
+                AllureLifecycle.Instance.UpdateTestCase(x => x.descriptionHtml += $"<p>Browser: {capabilities.GetCapability("browserName")}</p>");
+                AllureLifecycle.Instance.UpdateTestCase(x => x.descriptionHtml += $"<p>Platform: {capabilities.GetCapability("platformName")}</p>");
                 AllureLifecycle.Instance.UpdateTestCase(x => x.descriptionHtml += $"<p>Platform Version: {System.Environment.OSVersion}</p>");
 
                 AllureLifecycle.Instance.AddAttachment(
@@ -73,12 +73,12 @@ namespace WebDriverFinalTask.Base
             //{
             //    new KeyValuePair<string, string>("jd5890662", @",=zso:a[u<,\=\;u"),
             //    new KeyValuePair<string, string>("jb3720380", "Z;uNa>]}M6yZdMc+"),
-            //    new KeyValuePair<string, string>("janesimmons981", "Yu3'nk^t@%d*U48")
+            //    new KeyValuePair<string, string>("janesimmons981", "Yu3'nk^t@%d*U48\"")
             //};
 
             //LoginPage loginPage = new LoginPage(Driver);
 
-            //foreach(KeyValuePair<string, string>account in allTestAccounts)
+            //foreach (KeyValuePair<string, string> account in allTestAccounts)
             //{
 
             //    loginPage
@@ -86,7 +86,10 @@ namespace WebDriverFinalTask.Base
             //        .RemoveAllMessages()
             //        .OpenSentEmails()
             //        .RemoveAllMessages()
-            //        .RemoveAllMessagesFromTrashBin()
+            //        .OpenDrafts()
+            //        .RemoveAllMessages()
+            //        .OpenTrashBin()
+            //        .RemoveAllMessages()
             //        .Logout()
             //        .ChangeAccount();
             //}

@@ -1,4 +1,10 @@
-﻿using OpenQA.Selenium;
+﻿using NUnit.Framework;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Commands;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using System;
+using System.Collections.Generic;
 using WebDriverFinalTask.Base;
 
 namespace WebDriverFinalTask.Pages
@@ -14,29 +20,36 @@ namespace WebDriverFinalTask.Pages
 
         public LoginPage SetUserEmail(string userEmail)
         {
+            new WebDriverWait(Driver, TimeSpan.FromSeconds(5)).Until(condition => Driver.FindElement(By.Id("identifierId")).Displayed);
+
             EmailTextbox.SendKeys(userEmail);
+
             return this;
         }
 
         public LoginPage SubmitUserEmail()
         {
-            SubmitEmailButton.JsClick(driver);
+            SubmitEmailButton.JsClick(Driver);
+
             return this;
         }
 
         public LoginPage SetPassword(string password)
         {
             PasswordTextbox.SendKeys(password);
+            System.Threading.Thread.Sleep(2000);
             return this;
         }
 
         public MailPage SubmitPassword()
         {
-            SubmitPasswordButton.JsClick(driver);
-            return new MailPage(driver);
+            SubmitPasswordButton.JsClick(Driver);
+
+            return new MailPage(Driver);
         }
 
         public MailPage LoginToGmail(string userEmail, string password)
+        
         {
             return
                 SetUserEmail(userEmail)
@@ -44,18 +57,5 @@ namespace WebDriverFinalTask.Pages
                 .SetPassword(password)
                 .SubmitPassword();
         }
-
-        //public LoginPage Logout()
-        //{
-        //    OpenAccountPanel();
-        //    LogoutButton.JsClick(driver);
-        //    return this;
-        //}
-
-        //public LoginPage ChangeAccount()
-        //{
-        //    ChangeAccountButton.JsClick(driver);
-        //    return this;
-        //}
     }
 }

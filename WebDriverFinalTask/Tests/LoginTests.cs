@@ -23,6 +23,12 @@ namespace WebDriverFinalTask.Tests
             loginPage = new LoginPage(Driver);
         }
 
+        //[Test]
+        //public void test()
+        //{
+
+        //}
+
         [Test]
         [TestCase("jd5890662", @",=zso:a[u<,\=\;u")]
         [TestCase("jb3720380", @"Z;uNa>]}M6yZdMc+")]
@@ -71,7 +77,7 @@ namespace WebDriverFinalTask.Tests
         [TearDown]
         public void TestTearDown()
         {
-            loginPage.ChangeAccount();
+            //loginPage.ChangeAccount();
         }
     }
 }

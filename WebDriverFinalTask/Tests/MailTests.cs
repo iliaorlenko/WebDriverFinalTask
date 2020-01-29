@@ -1,5 +1,6 @@
 ﻿using Allure.NUnit.Attributes;
 using NUnit.Framework;
+using System.Collections.Generic;
 using WebDriverFinalTask.Base;
 using WebDriverFinalTask.Pages;
 using WebDriverFinalTask.TestData;
@@ -8,9 +9,10 @@ namespace WebDriverFinalTask.Tests
 {
     [TestFixture(BrowserName.Chrome)]
     [TestFixture(BrowserName.Firefox)]
-    [Parallelizable(ParallelScope.Fixtures)]
+    [NonParallelizable]
     public class MailTests : TestBase
     {
+        LoginPage loginPage;
         MailPage mailPage;
 
         public MailTests(BrowserName browser) : base(browser) { }
@@ -18,8 +20,8 @@ namespace WebDriverFinalTask.Tests
         [SetUp]
         public void TestSetUp()
         {
-            mailPage = new LoginPage(Driver)
-                .LoginToGmail("jd5890662", @",=zso:a[u<,\=\;u");
+            loginPage = new LoginPage(Driver);
+            mailPage = loginPage.LoginToGmail("jd5890662", @",=zso:a[u<,\=\;u");
         }
 
         [TearDown]
@@ -45,10 +47,15 @@ namespace WebDriverFinalTask.Tests
                 .PopulateEmailSubject(StringGenerator.GenerateString(20))
                 .PopulateEmailBody(StringGenerator.GenerateString(50))
                 .ClickSendEmailButton()
-                .OpenSentEmails();
+                .Logout()
+                .ChangeAccount();
 
-            StringAssert.Contains(mailPage.AssertionValues.SentEmailSubject, mailPage.LastMessageSubjectLabel.Text);
-            StringAssert.Contains(mailPage.AssertionValues.SentEmailBody, mailPage.LastMessageBodyLabel.Text);
+            loginPage
+                .LoginToGmail(addresseeEmail, @"Z;uNa>]}M6yZdMc+")
+                .WaitForSentEmail();
+
+            StringAssert.Contains(StoredValues.SentEmailSubject, mailPage.LastMessageSubjectLabel.Text);
+            StringAssert.Contains(StoredValues.SentEmailBody, mailPage.LastMessageBodyLabel.Text);
         }
 
         [Test]
@@ -69,11 +76,13 @@ namespace WebDriverFinalTask.Tests
                 .PopulateEmailBody(StringGenerator.GenerateString(50))
                 .ClickSendEmailButton()
                 .OpenSentEmails();
-            
+
+            StringAssert.Contains(StoredValues.SentEmailSubject, mailPage.LastMessageSubjectLabel.Text);
+            StringAssert.Contains(StoredValues.SentEmailBody, mailPage.LastMessageBodyLabel.Text);
         }
 
         [Test]
-        [TestCase("jb3720380@gmail.com")]
+        [TestCase("jb3720380@gmail.com"), NonParallelizable]
         [
             AllureSubSuite("Mail functionality tests"),
             AllureSeverity(Allure.Commons.Model.SeverityLevel.Blocker),
@@ -84,17 +93,23 @@ namespace WebDriverFinalTask.Tests
         public void VerifyDeleteEmail(string addresseeEmail)
         {
             mailPage
-                .SendEmail(addresseeEmail, StringGenerator.GenerateString(20), StringGenerator.GenerateString(50))
+                .StartNewEmail()
+                .PopulateEmailAddressee(addresseeEmail)
+                .PopulateEmailSubject(StringGenerator.GenerateString(20))
+                .PopulateEmailBody(StringGenerator.GenerateString(50))
+                .ClickSendEmailButton()
                 .Logout()
-                .ChangeAccount()
-                .LoginToGmail(addresseeEmail, @"Z;uNa>]}M6yZdMc+")
-                .StoreLastReceivedEmailData()
+                .ChangeAccount();
+
+            loginPage
+                .LoginToGmail(addresseeEmail, @"Z;uNa>]}M6yZdMc+");
+
+            mailPage.WaitForSentEmail()
                 .DeleteLastReceivedEmail()
                 .OpenTrashBin();
 
-            StringAssert.Contains(mailPage.AssertionValues.LastReceivedEmailSubject, mailPage.LastMessageSubjectLabel.Text);
-            StringAssert.Contains(mailPage.AssertionValues.LastReceivedEmailBody, mailPage.LastMessageBodyLabel.Text);
-
+            StringAssert.Contains(StoredValues.SentEmailSubject, mailPage.LastMessageSubjectLabel.Text);
+            StringAssert.Contains(StoredValues.SentEmailBody, mailPage.LastMessageBodyLabel.Text);
         }
     }
 }

@@ -10,12 +10,12 @@ namespace WebDriverFinalTask.Base
 {
     public class DriverContext : AllureReport
     {
-        protected Environment selectedEnvironment = Environment.LocalGrid;
+        protected Environment selectedEnvironment;
 
-        public RemoteWebDriver GetDriver(BrowserName browser)
+        public IWebDriver GetDriver(BrowserName browser)
         {
 
-            RemoteWebDriver Driver = null;
+            IWebDriver Driver = null;
 
             string GridEnvironment = null;
 
@@ -39,11 +39,11 @@ namespace WebDriverFinalTask.Base
                 switch (browser)
                 {
                     case BrowserName.Firefox:
-                        Driver = new FirefoxDriver();
+                        Driver = new FirefoxDriver(firefoxOpts);
                         break;
 
                     default:
-                        Driver = new ChromeDriver();
+                        Driver = new ChromeDriver(chromeOpts);
                         break;
                 }
             }
