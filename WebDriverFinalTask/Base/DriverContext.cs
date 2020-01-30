@@ -13,7 +13,6 @@ namespace WebDriverFinalTask.Base
 
         public IWebDriver GetDriver(BrowserName browser)
         {
-
             IWebDriver Driver = null;
 
             string GridEnvironment = null;
@@ -22,14 +21,9 @@ namespace WebDriverFinalTask.Base
 
             ChromeOptions chromeOpts = new ChromeOptions();
 
-            //chromeOpts.AddArgument("--start-maximized");
-            //chromeOpts.AddArgument("--disable-dev-shm-usage");
-            //chromeOpts.AddArgument("--disable-gpu");
-            //chromeOpts.AddArgument("--no-sandbox");
             chromeOpts.UnhandledPromptBehavior = UnhandledPromptBehavior.Accept;
-            //chromeOpts.AddAdditionalCapability("w3c", false);
+
             chromeOpts.UseSpecCompliantProtocol = false;
-            //chromeOpts.AddAdditionalCapability("supportsWebStorage", CapabilityType.SupportsWebStorage);
 
 
             // If environment == local, return new driver and finish driver setup
