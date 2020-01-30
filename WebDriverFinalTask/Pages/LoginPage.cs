@@ -13,15 +13,13 @@ namespace WebDriverFinalTask.Pages
     {
         public LoginPage(IWebDriver driver) : base(driver) { }
 
-        public IWebElement EmailTextbox => WaitFindElement(By.Id("identifierId"));
-        public IWebElement SubmitEmailButton => WaitFindElement(By.Id("identifierNext"));
-        public IWebElement PasswordTextbox => WaitFindElement(By.Name("password"));
-        public IWebElement SubmitPasswordButton => WaitFindElement(By.Id("passwordNext"));
+        public IWebElement EmailTextbox => WaitFindElement(By.XPath("//input[@type='email']"));
+        //public IWebElement SubmitEmailButton => WaitFindElement(By.Id("identifierNext"));
+        public IWebElement PasswordTextbox => WaitFindElement(By.XPath("//input[@type='password']"));
+        public IWebElement NextButton => WaitFindElement(By.XPath("//span[contains (text(), 'Далее')]/ancestor::div[@role='button']"));
 
         public LoginPage SetUserEmail(string userEmail)
         {
-            new WebDriverWait(Driver, TimeSpan.FromSeconds(5)).Until(condition => Driver.FindElement(By.Id("identifierId")).Displayed);
-
             EmailTextbox.SendKeys(userEmail);
 
             return this;
@@ -29,7 +27,7 @@ namespace WebDriverFinalTask.Pages
 
         public LoginPage SubmitUserEmail()
         {
-            SubmitEmailButton.JsClick(Driver);
+            NextButton.JsClick(Driver);
 
             return this;
         }
@@ -37,13 +35,15 @@ namespace WebDriverFinalTask.Pages
         public LoginPage SetPassword(string password)
         {
             PasswordTextbox.SendKeys(password);
-            System.Threading.Thread.Sleep(2000);
+
+            new WebDriverWait(Driver, TimeSpan.FromSeconds(2)).Until(condition => ElementExists(By.XPath("//span[contains (text(), 'Далее')]/ancestor::div[@role='button']")));
+
             return this;
         }
 
         public MailPage SubmitPassword()
         {
-            SubmitPasswordButton.JsClick(Driver);
+            NextButton.Click();
 
             return new MailPage(Driver);
         }

@@ -77,7 +77,7 @@ namespace WebDriverFinalTask.Tests
         [TearDown]
         public void TestTearDown()
         {
-            //loginPage.ChangeAccount();
+            loginPage.ChangeAccount();
         }
     }
 }

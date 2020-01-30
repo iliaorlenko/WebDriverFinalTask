@@ -9,11 +9,9 @@ namespace WebDriverFinalTask.Base
 {
     public static class Extensions
     {
+        // Click by className of found IWebElement
         public static void JsClick(this IWebElement element, IWebDriver driver)
         {
-            //Actions actions = new Actions(driver);
-            //actions.MoveToElement(element).Build().Perform();
-            //IWebElement a = actions.MoveToElement(element);
             IJavaScriptExecutor executor = (IJavaScriptExecutor)driver;
             executor.ExecuteScript($"document.getElementsByClassName('{element.GetAttribute("class")}')[0].click();");
         }
@@ -25,9 +23,6 @@ namespace WebDriverFinalTask.Base
             {
                 case ChromeOptions chromeOptions:
                     chromeOptions.AddAdditionalCapability(capabilityName, capabilityValue, true);
-                    //chromeOptions.AddArgument("--headless");
-                    //chromeOptions.AddArgument("--no-sandbox");
-                    //chromeOptions.AddArgument("--disable-dev-shm-usage");
                     break;
                 case FirefoxOptions firefoxOptions:
                     firefoxOptions.AddAdditionalCapability(capabilityName, capabilityValue, true);

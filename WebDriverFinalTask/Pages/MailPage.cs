@@ -31,7 +31,7 @@ namespace WebDriverFinalTask.Pages
             // Refresh page until sent email is displayed
             new WebDriverWait(Driver, TimeSpan.FromSeconds(60)).Until(cond =>
             {
-                while (!IsElementExists(By.XPath("(//table[@role='grid'])[last()]//tr[1]/td[6]/div/div/div/span/span")))
+                while (!ElementExists(By.XPath("(//table[@role='grid'])[last()]//tr[1]/td[6]/div/div/div/span/span")))
                 {
                     Driver.Navigate().Refresh();
                     return false;
@@ -75,7 +75,7 @@ namespace WebDriverFinalTask.Pages
             // Check if panel is already expanded and if not - expand it
             new WebDriverWait(Driver, TimeSpan.FromSeconds(2)).Until(condition =>
             {
-                if (!IsElementExists(By.XPath("//span[contains(text(), 'Свернуть')]")))
+                if (!ElementExists(By.XPath("//span[contains(text(), 'Свернуть')]")))
                 {
                     ExpandCategoryPanelButton.Click();
 
@@ -187,12 +187,12 @@ namespace WebDriverFinalTask.Pages
             while (checkboxChecked)
             {
                 //Find appropriate Remove button
-                if (IsElementExists(By.XPath("//div[contains(text(), 'Удалить ')]/parent::div[@role='button']")))
+                if (ElementExists(By.XPath("//div[contains(text(), 'Удалить ')]/parent::div[@role='button']")))
                 {
                     removeButtonLocator = By.XPath("(//div[contains(text(), 'Удалить ')]/parent::div[@role='button'])[last()]");
                 }
                 else
-                    if (IsElementExists(By.XPath("(//div[@data-tooltip='Удалить'])[last()]")))
+                    if (ElementExists(By.XPath("(//div[@data-tooltip='Удалить'])[last()]")))
                 {
                     removeButtonLocator = By.XPath("(//div[@data-tooltip='Удалить'])[last()]");
                 }
@@ -205,7 +205,7 @@ namespace WebDriverFinalTask.Pages
 
                 wait.Until(condition =>
                 {
-                    if (IsElementExists(By.XPath("//span[contains (text(), 'Выбрать все цепочки')]")))
+                    if (ElementExists(By.XPath("//span[contains (text(), 'Выбрать все цепочки')]")))
                     {
                         SelectAllChaisButton.Click();
 

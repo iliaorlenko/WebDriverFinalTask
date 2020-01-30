@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
@@ -15,35 +16,43 @@ namespace WebDriverFinalTask.Base
 
         public IWebElement LogoutButton => WaitFindElement(By.XPath("//a[@id='gb_71']"));
         public IWebElement SelectAccountPanelHeading => WaitFindElement(By.XPath("//span[contains(text(), 'Выберите аккаунт')]"));
-        public IWebElement ChangeAccountButton => WaitFindElement(By.XPath("//div[contains(text(), 'Сменить аккаунт')]"));
+        public IWebElement ChangeAccountButton => WaitFindElement(By.XPath("//div[contains(text(), 'Сменить аккаунт')]/ancestor::div[@role='link']"));
         public IWebElement AccountPanelButton => WaitFindElement(By.XPath("//a[contains (@aria-label, 'Аккаунт')]"));
 
         public MailPage OpenAccountPanel()
         {
+            new WebDriverWait(Driver, TimeSpan.FromSeconds(10)).Until(condition => ElementExists(By.XPath("//div[contains(text(), 'Здесь ничего нет')]")));
+
             AccountPanelButton.JsClick(Driver);
+
+            //new WebDriverWait(Driver, TimeSpan.FromSeconds(5)).Until(condition => ElementExists(By.XPath("//a[@id='gb_71']")));
 
             return new MailPage(Driver);
         }
 
-        public MailPage ClickLogoutButton()
+        public LoginPage ClickLogoutButton()
         {
-            LogoutButton.JsClick(Driver);
+            LogoutButton.Click();
 
-            return new MailPage(Driver);
+            new WebDriverWait(Driver, TimeSpan.FromSeconds(5)).Until(condition => ElementExists(By.XPath("//div[contains(text(), 'Сменить аккаунт')]")));
+
+            return new LoginPage(Driver);
         }
 
         public LoginPage Logout()
         {
             OpenAccountPanel();
 
-            LogoutButton.JsClick(Driver);
+            LogoutButton.Click();
 
             return new LoginPage(Driver);
         }
 
         public LoginPage ChangeAccount()
         {
-            ChangeAccountButton.JsClick(Driver);
+            Actions actions = new Actions(Driver);
+
+            actions.MoveToElement(ChangeAccountButton).Click().Build().Perform();
 
             return new LoginPage(Driver);
         }
@@ -89,7 +98,7 @@ namespace WebDriverFinalTask.Base
             // Return expected element
             return ExpectedElement;
         }
-        public bool IsElementExists(By locator)
+        public bool ElementExists(By locator)
         {
             try
             {
