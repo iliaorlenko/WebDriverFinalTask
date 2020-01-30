@@ -2,33 +2,31 @@
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using WebDriverFinalTask.Pages;
-using WebDriverFinalTask.TestData;
 
 namespace WebDriverFinalTask.Base
 {
     public class PageBase
     {
         protected IWebDriver Driver;
-        public PageBase(IWebDriver Driver) { this.Driver = Driver; }
+        protected PageBase(IWebDriver Driver) { this.Driver = Driver; }
 
         public IWebElement LogoutButton => WaitFindElement(By.XPath("//a[@id='gb_71']"));
         public IWebElement SelectAccountPanelHeading => WaitFindElement(By.XPath("//span[contains(text(), 'Выберите аккаунт')]"));
         public IWebElement ChangeAccountButton => WaitFindElement(By.XPath("//div[contains(text(), 'Сменить аккаунт')]/ancestor::div[@role='link']"));
         public IWebElement AccountPanelButton => WaitFindElement(By.XPath("//a[contains (@aria-label, 'Аккаунт')]"));
 
+
         public MailPage OpenAccountPanel()
         {
-            new WebDriverWait(Driver, TimeSpan.FromSeconds(10)).Until(condition => ElementExists(By.XPath("//div[contains(text(), 'Здесь ничего нет')]")));
+            new WebDriverWait(Driver, TimeSpan.FromSeconds(10)).Until(condition => ElementExists(By.XPath("//div[@aria-label='Задачи']")));
 
             AccountPanelButton.JsClick(Driver);
 
-            //new WebDriverWait(Driver, TimeSpan.FromSeconds(5)).Until(condition => ElementExists(By.XPath("//a[@id='gb_71']")));
-
             return new MailPage(Driver);
         }
+
 
         public LoginPage ClickLogoutButton()
         {
@@ -39,6 +37,7 @@ namespace WebDriverFinalTask.Base
             return new LoginPage(Driver);
         }
 
+
         public LoginPage Logout()
         {
             OpenAccountPanel();
@@ -48,6 +47,7 @@ namespace WebDriverFinalTask.Base
             return new LoginPage(Driver);
         }
 
+
         public LoginPage ChangeAccount()
         {
             Actions actions = new Actions(Driver);
@@ -56,6 +56,7 @@ namespace WebDriverFinalTask.Base
 
             return new LoginPage(Driver);
         }
+
 
         // Wait and get element
         public IWebElement WaitFindElement(By locator)
@@ -98,14 +99,17 @@ namespace WebDriverFinalTask.Base
             // Return expected element
             return ExpectedElement;
         }
+
+
         public bool ElementExists(By locator)
         {
             try
             {
                 Driver.FindElement(locator);
             }
-            catch (NoSuchElementException e)
+            catch (NoSuchElementException ex)
             {
+                Debug.WriteLine(ex.Message);
                 return false;
             }
             return true;

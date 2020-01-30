@@ -11,42 +11,52 @@ namespace WebDriverFinalTask.Pages
     {
         public MailPage(IWebDriver Driver) : base(Driver) { }
 
-        private IWebElement NewMessageButton => WaitFindElement(By.XPath("//div[contains(text(), 'Написать')]"));
-        private IWebElement EmailAddresseeTextbox => WaitFindElement(By.XPath("//textarea[contains (@aria-label, 'Кому')]"));
-        private IWebElement EmailSubjectTextbox => WaitFindElement(By.Name("subjectbox"));
-        private IWebElement EmailBodyTextbox => WaitFindElement(By.XPath("//div[contains (@aria-label, 'Тело письма')]"));
-        private IWebElement SendEmailButton => WaitFindElement(By.XPath("//div[contains(@data-tooltip, 'Отправить')]"));
-        private IWebElement ExpandCategoryPanelButton => WaitFindElement(By.XPath("//span[contains (text(), 'Ещё')]/parent::span[@role='button']"));
-        private IWebElement TrashBinButton => WaitFindElement(By.XPath("//div[@data-tooltip='Корзина']"));
-        public IWebElement LastMessageSubjectLabel => WaitFindElement(By.XPath("(//table[@role='grid'])[last()]//tr[1]/td[6]/div/div/div/span/span"));
+        By NewMessageButtonLocator => By.XPath("//div[contains(text(), 'Написать')]");
+        By LastMessageSubjectLocator => By.XPath("(//table[@role='grid'])[last()]//tr[1]/td[6]/div/div/div/span/span");
+        By DeleteSelectedMessagesIconButtonLocator => By.XPath("(//div[@data-tooltip='Удалить'])[last()]");
+        By DeleteSelectedMessagesTextButtonLocator => By.XPath("(//div[contains(text(), 'Удалить ')]/parent::div[@role='button'])[last()]");
+        By SelectAllChainsButtonLocator => By.XPath("//span[contains (text(), 'Выбрать все цепочки')]");
+        By RetryLoadingLinkLocator => By.XPath("//a[contains (text(), 'Повторить попытку')]");
+
+        IWebElement EmailAddresseeTextbox => WaitFindElement(By.XPath("//textarea[contains (@aria-label, 'Кому')]"));
+        IWebElement EmailSubjectTextbox => WaitFindElement(By.Name("subjectbox"));
+        IWebElement EmailBodyTextbox => WaitFindElement(By.XPath("//div[contains (@aria-label, 'Тело письма')]"));
+        IWebElement SendEmailButton => WaitFindElement(By.XPath("//div[contains(@data-tooltip, 'Отправить')]"));
+        IWebElement ExpandCategoryPanelButton => WaitFindElement(By.XPath("//span[contains (text(), 'Ещё')]/parent::span[@role='button']"));
+        IWebElement TrashBinButton => WaitFindElement(By.XPath("//div[@data-tooltip='Корзина']"));
+        //public IWebElement DeleteLastReceivedEmailButton => WaitFindElement(By.XPath("(//table[@role='grid'])[2]//tr[1]//li[@data-tooltip='Удалить']//span"));
+        IWebElement SelectAllMessagesCheckbox => WaitFindElement(By.XPath("(//div[@data-tooltip='Выбрать'])[last()]//span"));
+        IWebElement NewMessageButton => WaitFindElement(NewMessageButtonLocator);
+        IWebElement SelectAllChaisButton => WaitFindElement(SelectAllChainsButtonLocator);
+
         public IWebElement LastMessageBodyLabel => WaitFindElement(By.XPath("(//table[@role='grid'])[last()]//tr[1]/td[6]/div/div/span"));
-        public IWebElement DeleteLastReceivedEmailButton => WaitFindElement(By.XPath("(//table[@role='grid'])[2]//tr[1]//li[@data-tooltip='Удалить']//span"));
-        public IWebElement SelectAllMessagesCheckbox => WaitFindElement(By.XPath("(//div[@data-tooltip='Выбрать'])[last()]//span"));
-        public IWebElement DeleteSelectedMessagesButton => WaitFindElement(By.XPath("(//div[@data-tooltip='Удалить'])[last()]"));
-        public IWebElement DeleteSelectedMessagesTextButton => WaitFindElement(By.XPath("//div[contains(text(), 'Удалить ')]/parent::div[@role='button']"));
-        IWebElement SelectAllChaisButton => WaitFindElement(By.XPath("//span[contains (text(), 'Выбрать все цепочки')]"));
+        public IWebElement LastMessageSubjectLabel => WaitFindElement(LastMessageSubjectLocator);
+
 
         public MailPage WaitForSentEmail()
         {
             // Refresh page until sent email is displayed
             new WebDriverWait(Driver, TimeSpan.FromSeconds(60)).Until(cond =>
             {
-                while (!ElementExists(By.XPath("(//table[@role='grid'])[last()]//tr[1]/td[6]/div/div/div/span/span")))
+                while (!ElementExists(LastMessageSubjectLocator) || LastMessageSubjectLabel.Text != StoredValues.SentEmailSubject)
                 {
-                    Driver.Navigate().Refresh();
-                    return false;
-                }
-
-                while(LastMessageSubjectLabel.Text != StoredValues.SentEmailSubject)
-                {
-                    Driver.Navigate().Refresh();
+                    if (ElementExists(NewMessageButtonLocator))
+                    {
+                        Driver.Navigate().Refresh();
+                    }
+                    else
+                        // Sometimes GMail redirecs to error page. In that case need to click the link from the condition below to try again
+                        if (ElementExists(RetryLoadingLinkLocator))
+                    {
+                        Driver.FindElement(RetryLoadingLinkLocator).Click();
+                    }
                     return false;
                 }
                 return true;
             });
-
             return this;
         }
+
 
         public MailPage OpenTrashBin()
         {
@@ -59,6 +69,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
+
         public MailPage DeleteLastReceivedEmail()
         {
             LastMessageSubjectLabel.Click();
@@ -70,10 +81,11 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
+
         public MailPage ExpandCategoryPanel()
         {
             // Check if panel is already expanded and if not - expand it
-            new WebDriverWait(Driver, TimeSpan.FromSeconds(2)).Until(condition =>
+            new WebDriverWait(Driver, TimeSpan.FromSeconds(3)).Until(condition =>
             {
                 if (!ElementExists(By.XPath("//span[contains(text(), 'Свернуть')]")))
                 {
@@ -96,14 +108,16 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
+
         public MailPage StartNewEmail()
         {
-            new WebDriverWait(Driver, TimeSpan.FromSeconds(5)).Until(condition => Driver.FindElement(By.XPath("//div[contains(text(), 'Написать')]")).Displayed);
+            new WebDriverWait(Driver, TimeSpan.FromSeconds(5)).Until(condition => ElementExists(NewMessageButtonLocator));
 
             NewMessageButton.Click();
 
             return this;
         }
+
 
         public MailPage PopulateEmailAddressee(string addressee)
         {
@@ -111,6 +125,7 @@ namespace WebDriverFinalTask.Pages
 
             return this;
         }
+
 
         public MailPage PopulateEmailBody(string emailBodyValue)
         {
@@ -121,6 +136,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
+
         public MailPage PopulateEmailSubject(string emailSubjectValue)
         {
             EmailSubjectTextbox.SendKeys(emailSubjectValue);
@@ -129,6 +145,7 @@ namespace WebDriverFinalTask.Pages
 
             return this;
         }
+
 
         public MailPage ClickSendEmailButton()
         {
@@ -139,6 +156,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
+
         public MailPage OpenSentEmails()
         {
             WaitFindElement(By.XPath("//a[@title='Отправленные']")).Click();
@@ -148,6 +166,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
+
         public MailPage OpenDrafts()
         {
             WaitFindElement(By.XPath("//a[@title='Черновики']")).Click();
@@ -156,6 +175,7 @@ namespace WebDriverFinalTask.Pages
 
             return this;
         }
+
 
         public MailPage SendEmail(string addressee, string emailSubject, string emailBody)
         {
@@ -172,6 +192,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
+
         public MailPage RemoveAllMessages()
         {
             WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(5));
@@ -182,49 +203,43 @@ namespace WebDriverFinalTask.Pages
 
             checkboxChecked = bool.Parse(SelectAllMessagesCheckbox.GetAttribute("aria-checked"));
 
-            By removeButtonLocator;
+            IWebElement removeButton = null;
 
             while (checkboxChecked)
-            {
                 //Find appropriate Remove button
-                if (ElementExists(By.XPath("//div[contains(text(), 'Удалить ')]/parent::div[@role='button']")))
+                if (ElementExists(DeleteSelectedMessagesTextButtonLocator))
                 {
-                    removeButtonLocator = By.XPath("(//div[contains(text(), 'Удалить ')]/parent::div[@role='button'])[last()]");
+                    removeButton = Driver.FindElement(DeleteSelectedMessagesTextButtonLocator);
                 }
                 else
-                    if (ElementExists(By.XPath("(//div[@data-tooltip='Удалить'])[last()]")))
+                    if (ElementExists(DeleteSelectedMessagesIconButtonLocator))
                 {
-                    removeButtonLocator = By.XPath("(//div[@data-tooltip='Удалить'])[last()]");
+                    removeButton = Driver.FindElement(DeleteSelectedMessagesIconButtonLocator);
                 }
                 else
                 {
                     throw new Exception("Unknown remove button type.");
                 }
 
-                IWebElement removeButton = Driver.FindElement(removeButtonLocator);
-
-                wait.Until(condition =>
+            wait.Until(condition =>
+            {
+                if (ElementExists(SelectAllChainsButtonLocator))
                 {
-                    if (ElementExists(By.XPath("//span[contains (text(), 'Выбрать все цепочки')]")))
-                    {
-                        SelectAllChaisButton.Click();
+                    SelectAllChaisButton.Click();
 
-                        removeButton.Click();
+                    removeButton.Click();
 
-                        WaitFindElement(By.XPath("(//button[@name='ok'])[last()]")).Click();
-
-                        return true;
-                    }
-                    else removeButton.Click();
-
-                    checkboxChecked = bool.Parse(SelectAllMessagesCheckbox.GetAttribute("aria-checked"));
+                    WaitFindElement(By.XPath("(//button[@name='ok'])[last()]")).Click();
 
                     return true;
-                });
-            }
+                }
+                else removeButton.Click();
 
+                checkboxChecked = bool.Parse(SelectAllMessagesCheckbox.GetAttribute("aria-checked"));
+
+                return true;
+            });
             return this;
         }
-
     }
 }

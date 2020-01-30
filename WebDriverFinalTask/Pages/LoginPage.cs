@@ -1,10 +1,6 @@
-﻿using NUnit.Framework;
-using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Commands;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
-using System.Collections.Generic;
 using WebDriverFinalTask.Base;
 
 namespace WebDriverFinalTask.Pages
@@ -13,10 +9,11 @@ namespace WebDriverFinalTask.Pages
     {
         public LoginPage(IWebDriver driver) : base(driver) { }
 
-        public IWebElement EmailTextbox => WaitFindElement(By.XPath("//input[@type='email']"));
-        //public IWebElement SubmitEmailButton => WaitFindElement(By.Id("identifierNext"));
-        public IWebElement PasswordTextbox => WaitFindElement(By.XPath("//input[@type='password']"));
-        public IWebElement NextButton => WaitFindElement(By.XPath("//span[contains (text(), 'Далее')]/ancestor::div[@role='button']"));
+        By NextButtonLocator => By.XPath("//span[contains (text(), 'Далее')]/ancestor::div[@role='button']");
+
+        IWebElement EmailTextbox => WaitFindElement(By.XPath("//input[@type='email']"));
+        IWebElement PasswordTextbox => WaitFindElement(By.XPath("//input[@type='password']"));
+        IWebElement NextButton => WaitFindElement(NextButtonLocator);
 
         public LoginPage SetUserEmail(string userEmail)
         {
@@ -36,7 +33,7 @@ namespace WebDriverFinalTask.Pages
         {
             PasswordTextbox.SendKeys(password);
 
-            new WebDriverWait(Driver, TimeSpan.FromSeconds(2)).Until(condition => ElementExists(By.XPath("//span[contains (text(), 'Далее')]/ancestor::div[@role='button']")));
+            new WebDriverWait(Driver, TimeSpan.FromSeconds(2)).Until(condition => ElementExists(NextButtonLocator));
 
             return this;
         }
@@ -49,7 +46,7 @@ namespace WebDriverFinalTask.Pages
         }
 
         public MailPage LoginToGmail(string userEmail, string password)
-        
+
         {
             return
                 SetUserEmail(userEmail)

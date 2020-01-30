@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WebDriverFinalTask.TestData
+﻿namespace WebDriverFinalTask.TestData
 {
     public static class StoredValues
     {

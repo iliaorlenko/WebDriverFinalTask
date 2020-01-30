@@ -1,8 +1,5 @@
 ﻿using Allure.NUnit.Attributes;
 using NUnit.Framework;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Html5;
-using OpenQA.Selenium.Remote;
 using WebDriverFinalTask.Base;
 using WebDriverFinalTask.Pages;
 

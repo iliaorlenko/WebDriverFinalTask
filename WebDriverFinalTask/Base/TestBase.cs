@@ -1,14 +1,9 @@
 ﻿using Allure.Commons;
-using Allure.Commons.Model;
 using NUnit.Framework;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Html5;
 using OpenQA.Selenium.Remote;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using WebDriverFinalTask.Pages;
-using WebDriverFinalTask.TestData;
 
 namespace WebDriverFinalTask.Base
 {
@@ -18,6 +13,7 @@ namespace WebDriverFinalTask.Base
 
         protected IWebDriver Driver { get; set; }
 
+
         public TestBase(BrowserName browser)
         {
             string env = TestContext.Parameters.Get("env", "Local");
@@ -25,6 +21,7 @@ namespace WebDriverFinalTask.Base
             currentBrowser = browser;
             SetupDriver(browser);
         }
+
 
         public void SetupDriver(BrowserName browser)
         {
@@ -34,15 +31,6 @@ namespace WebDriverFinalTask.Base
             Driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
         }
 
-        [OneTimeSetUp]
-        public void GlobalFixturesSetUp()
-        {
-        }
-
-        [SetUp]
-        public void GlobalTestsSetUp()
-        {
-        }
 
         [TearDown]
         public void GlobalTestsTearDown()
@@ -64,6 +52,7 @@ namespace WebDriverFinalTask.Base
                 SetupDriver(currentBrowser);
             }
         }
+
 
         [OneTimeTearDown]
         public void GlobalFixturesTearDown()
@@ -109,13 +98,5 @@ namespace WebDriverFinalTask.Base
 
             screenshot.SaveAsFile(dirName + fileName);
         }
-
-        //public void ClearSessionStorage()
-        //{
-        //    IJavaScriptExecutor executor = Driver;
-        //    var sessionStorage = executor.ExecuteScript("return sessionStorage.getItem('key')");
-        //    for(int i = 0; i < )
-        //}
-
     }
 }

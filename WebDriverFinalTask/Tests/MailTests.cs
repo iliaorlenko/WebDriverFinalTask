@@ -1,6 +1,5 @@
 ﻿using Allure.NUnit.Attributes;
 using NUnit.Framework;
-using System.Collections.Generic;
 using WebDriverFinalTask.Base;
 using WebDriverFinalTask.Pages;
 using WebDriverFinalTask.TestData;

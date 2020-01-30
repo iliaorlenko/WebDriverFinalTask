@@ -2,7 +2,6 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Html5;
 using OpenQA.Selenium.Remote;
 using System;
 
@@ -49,8 +48,8 @@ namespace WebDriverFinalTask.Base
             }
 
             else
-                if(selectedEnvironment == Environment.BrowserStack)
-                {
+                if (selectedEnvironment == Environment.BrowserStack)
+            {
                 // Else if environment == browserstack, switch browser and return new RemoteWebDriver with BrowserStackUri and selected browser capabilities
                 chromeOpts.AddGlobalCapability("os", "Windows");
                 chromeOpts.AddGlobalCapability("os_version", "10");
@@ -58,16 +57,16 @@ namespace WebDriverFinalTask.Base
                 firefoxOpts.AddGlobalCapability("os_version", "10");
 
                 switch (browser)
-                    {
-                        case BrowserName.Chrome:
-                            Driver = new RemoteWebDriver(Settings.BrowserStackUri, chromeOpts);
+                {
+                    case BrowserName.Chrome:
+                        Driver = new RemoteWebDriver(Settings.BrowserStackUri, chromeOpts);
                         break;
 
-                        case BrowserName.Firefox:
-                            Driver = new RemoteWebDriver(Settings.BrowserStackUri, firefoxOpts);
+                    case BrowserName.Firefox:
+                        Driver = new RemoteWebDriver(Settings.BrowserStackUri, firefoxOpts);
                         break;
-                    }
                 }
+            }
 
             else
             {
