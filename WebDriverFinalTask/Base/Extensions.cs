@@ -7,7 +7,7 @@ namespace WebDriverFinalTask.Base
 {
     public static class Extensions
     {
-        // Click by className of found IWebElement
+        // Clicks by className of found IWebElement
         public static void JsClick(this IWebElement element, IWebDriver driver)
         {
             IJavaScriptExecutor executor = (IJavaScriptExecutor)driver;
@@ -16,7 +16,7 @@ namespace WebDriverFinalTask.Base
         }
 
 
-        // Extension method for adding capabilities for any kind of browser-specific options classes
+        // Adds capabilities for any kind of browser-specific options classes
         public static void AddGlobalCapability(this DriverOptions driverOptions, string capabilityName, string capabilityValue)
         {
             switch (driverOptions)

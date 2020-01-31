@@ -9,8 +9,9 @@ namespace WebDriverFinalTask.Base
 {
     public class DriverContext : AllureReport
     {
-        protected Environment selectedEnvironment;
+        protected Environment SelectedEnvironment;
 
+        // Prepares appropriate environment based on provided Environment from the console and returns appropriate driver
         public IWebDriver GetDriver(BrowserName browser)
         {
             IWebDriver Driver = null;
@@ -27,7 +28,7 @@ namespace WebDriverFinalTask.Base
 
 
             // If environment == local, return new driver and finish driver setup
-            if (selectedEnvironment == Environment.Local)
+            if (SelectedEnvironment == Environment.Local)
             {
                 switch (browser)
                 {
@@ -42,7 +43,7 @@ namespace WebDriverFinalTask.Base
             }
 
             else
-                if (selectedEnvironment == Environment.BrowserStack)
+                if (SelectedEnvironment == Environment.BrowserStack)
             {
                 // Else if environment == browserstack, switch browser and return new RemoteWebDriver with BrowserStackUri and selected browser capabilities
                 chromeOpts.AddGlobalCapability("os", "Windows");
@@ -65,7 +66,7 @@ namespace WebDriverFinalTask.Base
             else
             {
                 // Else prepare Uri base for new RemoteWebDriver, switch browser and return new RemoteWebDriver with new Uri of prepared base combined with selected browser port and capabilities
-                switch (selectedEnvironment)
+                switch (SelectedEnvironment)
                 {
                     case Environment.LocalGrid:
                         GridEnvironment = Settings.LocalGrid;

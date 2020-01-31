@@ -3,7 +3,6 @@ using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
 using WebDriverFinalTask.Base;
-using WebDriverFinalTask.TestData;
 
 namespace WebDriverFinalTask.Pages
 {
@@ -28,17 +27,16 @@ namespace WebDriverFinalTask.Pages
         IWebElement SelectAllMessagesCheckbox => WaitFindElement(By.XPath("(//div[@data-tooltip='Выбрать'])[last()]//span"));
         IWebElement NewMessageButton => WaitFindElement(NewMessageButtonLocator);
         IWebElement SelectAllChaisButton => WaitFindElement(SelectAllChainsButtonLocator);
-
         public IWebElement LastMessageBodyLabel => WaitFindElement(By.XPath("(//table[@role='grid'])[last()]//tr[1]/td[6]/div/div/span"));
         public IWebElement LastMessageSubjectLabel => WaitFindElement(LastMessageSubjectLocator);
 
-
-        public MailPage WaitForSentEmail()
+        // Waits for sent email to appear in Inbox
+        public MailPage WaitForSentEmail(string sentEmailSubject)
         {
             // Refresh page until sent email is displayed
             new WebDriverWait(Driver, TimeSpan.FromSeconds(60)).Until(cond =>
             {
-                while (!ElementExists(LastMessageSubjectLocator) || LastMessageSubjectLabel.Text != StoredValues.SentEmailSubject)
+                while (!ElementExists(LastMessageSubjectLocator) || LastMessageSubjectLabel.Text != sentEmailSubject)
                 {
                     if (ElementExists(NewMessageButtonLocator))
                     {
@@ -57,7 +55,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
-
+        // Opens Trash Bin category
         public MailPage OpenTrashBin()
         {
             ExpandCategoryPanel();
@@ -69,7 +67,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
-
+        // Deletes last received email and puts it in Trash Bin
         public MailPage DeleteLastReceivedEmail()
         {
             LastMessageSubjectLabel.Click();
@@ -81,7 +79,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
-
+        // Expands Categories panel on the left
         public MailPage ExpandCategoryPanel()
         {
             // Check if panel is already expanded and if not - expand it
@@ -108,7 +106,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
-
+        // Clicks New Message button
         public MailPage StartNewEmail()
         {
             new WebDriverWait(Driver, TimeSpan.FromSeconds(5)).Until(condition => ElementExists(NewMessageButtonLocator));
@@ -118,7 +116,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
-
+        // Populates provided addressee value into 'To' field
         public MailPage PopulateEmailAddressee(string addressee)
         {
             EmailAddresseeTextbox.SendKeys(addressee);
@@ -126,27 +124,23 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
-
-        public MailPage PopulateEmailBody(string emailBodyValue)
-        {
-            EmailBodyTextbox.SendKeys(emailBodyValue);
-
-            StoredValues.SentEmailBody = emailBodyValue;
-
-            return this;
-        }
-
-
+        // Populates provided subject value into 'Email Subject' field
         public MailPage PopulateEmailSubject(string emailSubjectValue)
         {
             EmailSubjectTextbox.SendKeys(emailSubjectValue);
 
-            StoredValues.SentEmailSubject = emailSubjectValue;
+            return this;
+        }
+
+        // Populates provided body value into 'Email Body' field
+        public MailPage PopulateEmailBody(string emailBodyValue)
+        {
+            EmailBodyTextbox.SendKeys(emailBodyValue);
 
             return this;
         }
 
-
+        // Clicks 'Send Email' button and waits until confirmation appears
         public MailPage ClickSendEmailButton()
         {
             SendEmailButton.JsClick(Driver);
@@ -156,7 +150,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
-
+        // Opens Sent category
         public MailPage OpenSentEmails()
         {
             WaitFindElement(By.XPath("//a[@title='Отправленные']")).Click();
@@ -166,7 +160,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
-
+        // Opens Draft category
         public MailPage OpenDrafts()
         {
             WaitFindElement(By.XPath("//a[@title='Черновики']")).Click();
@@ -176,23 +170,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
-
-        public MailPage SendEmail(string addressee, string emailSubject, string emailBody)
-        {
-            StartNewEmail();
-
-            PopulateEmailAddressee(addressee);
-
-            PopulateEmailSubject(emailSubject);
-
-            PopulateEmailBody(emailBody);
-
-            ClickSendEmailButton();
-
-            return this;
-        }
-
-
+        // Removes all messages from current category. Can be used on TestBase's OneTimeTearDown to make clean-up
         public MailPage RemoveAllMessages()
         {
             WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(5));

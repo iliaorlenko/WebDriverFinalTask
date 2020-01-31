@@ -17,7 +17,7 @@ namespace WebDriverFinalTask.Base
         public IWebElement ChangeAccountButton => WaitFindElement(By.XPath("//div[contains(text(), 'Сменить аккаунт')]/ancestor::div[@role='link']"));
         public IWebElement AccountPanelButton => WaitFindElement(By.XPath("//a[contains (@aria-label, 'Аккаунт')]"));
 
-
+        // Opens Account panel and returns new MailPage
         public MailPage OpenAccountPanel()
         {
             new WebDriverWait(Driver, TimeSpan.FromSeconds(10)).Until(condition => ElementExists(By.XPath("//div[@aria-label='Задачи']")));
@@ -27,7 +27,7 @@ namespace WebDriverFinalTask.Base
             return new MailPage(Driver);
         }
 
-
+        // Clicks Logout button and returns new LoginPage
         public LoginPage ClickLogoutButton()
         {
             LogoutButton.Click();
@@ -37,7 +37,7 @@ namespace WebDriverFinalTask.Base
             return new LoginPage(Driver);
         }
 
-
+        // Logs out and returns new LoginPage
         public LoginPage Logout()
         {
             OpenAccountPanel();
@@ -47,7 +47,7 @@ namespace WebDriverFinalTask.Base
             return new LoginPage(Driver);
         }
 
-
+        // Clicks Change Account button and returns new LoginPage
         public LoginPage ChangeAccount()
         {
             Actions actions = new Actions(Driver);
@@ -100,7 +100,7 @@ namespace WebDriverFinalTask.Base
             return ExpectedElement;
         }
 
-
+        // Checks if element with provided locator exists on a page
         public bool ElementExists(By locator)
         {
             try

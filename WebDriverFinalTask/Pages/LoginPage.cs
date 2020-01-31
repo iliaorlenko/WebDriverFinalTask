@@ -15,6 +15,7 @@ namespace WebDriverFinalTask.Pages
         IWebElement PasswordTextbox => WaitFindElement(By.XPath("//input[@type='password']"));
         IWebElement NextButton => WaitFindElement(NextButtonLocator);
 
+        // Sets provided login/email
         public LoginPage SetUserEmail(string userEmail)
         {
             EmailTextbox.SendKeys(userEmail);
@@ -22,6 +23,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
+        // Submits populated login/email
         public LoginPage SubmitUserEmail()
         {
             NextButton.JsClick(Driver);
@@ -29,6 +31,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
+        // Sets provided password
         public LoginPage SetPassword(string password)
         {
             PasswordTextbox.SendKeys(password);
@@ -38,6 +41,7 @@ namespace WebDriverFinalTask.Pages
             return this;
         }
 
+        // Submits provided password
         public MailPage SubmitPassword()
         {
             NextButton.Click();
@@ -45,6 +49,7 @@ namespace WebDriverFinalTask.Pages
             return new MailPage(Driver);
         }
 
+        // Logins with provided login/password
         public MailPage LoginToGmail(string userEmail, string password)
 
         {

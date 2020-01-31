@@ -12,19 +12,13 @@ namespace WebDriverFinalTask.Tests
     {
         public LoginTests(BrowserName browser) : base(browser) { }
 
-        LoginPage loginPage;
+        LoginPage _loginPage;
 
         [SetUp]
         public void SetUpTest()
         {
-            loginPage = new LoginPage(Driver);
+            _loginPage = new LoginPage(Driver);
         }
-
-        //[Test]
-        //public void test()
-        //{
-
-        //}
 
         [Test]
         [TestCase("jd5890662", @",=zso:a[u<,\=\;u")]
@@ -39,15 +33,16 @@ namespace WebDriverFinalTask.Tests
         ]
         public void VerifyLoginWithValidCredentials(string username, string password)
         {
+            string AssertMessage = "The page does not contain AccountPanelButton element.";
 
-            loginPage.SetUserEmail(username)
+            _loginPage.SetUserEmail(username)
                 .SubmitUserEmail()
                 .SetPassword(password)
                 .SubmitPassword();
 
-            Assert.True(loginPage.AccountPanelButton.Displayed, $"The page does not contain AccountPanelButton element.");
+            Assert.True(_loginPage.AccountPanelButton.Displayed, AssertMessage);
 
-            loginPage.Logout();
+            _loginPage.Logout();
         }
 
         [Test]
@@ -63,18 +58,20 @@ namespace WebDriverFinalTask.Tests
         ]
         public void VerifyLogout(string username, string password)
         {
-            loginPage.LoginToGmail(username, password)
+            string ExpectedResult = "Выберите аккаунт";
+            string AssertMessage = $"data-email attribute of profileOptionButton does not contain expected username: {username}";
+
+            _loginPage.LoginToGmail(username, password)
                 .OpenAccountPanel()
                 .ClickLogoutButton();
 
-            StringAssert.AreEqualIgnoringCase(loginPage.SelectAccountPanelHeading.Text, "Выберите аккаунт",
-                $"data-email attribute of profileOptionButton does not contain expected username: {username}");
+            StringAssert.AreEqualIgnoringCase(_loginPage.SelectAccountPanelHeading.Text, ExpectedResult, AssertMessage);
         }
 
         [TearDown]
         public void TestTearDown()
         {
-            loginPage.ChangeAccount();
+            _loginPage.ChangeAccount();
         }
     }
 }

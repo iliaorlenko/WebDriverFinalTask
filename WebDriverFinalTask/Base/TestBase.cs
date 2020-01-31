@@ -9,19 +9,20 @@ namespace WebDriverFinalTask.Base
 {
     public class TestBase : DriverContext
     {
-        BrowserName currentBrowser;
+        readonly BrowserName _currentBrowser;
 
         protected IWebDriver Driver { get; set; }
 
+        // Constructor that takes console parameters and prepares appropriate driver
         public TestBase(BrowserName browser)
         {
             string env = TestContext.Parameters.Get("env", "Local");
-            selectedEnvironment = (Environment)Enum.Parse(typeof(Environment), env, true);
-            currentBrowser = browser;
+            SelectedEnvironment = (Environment)Enum.Parse(typeof(Environment), env, true);
+            _currentBrowser = browser;
             SetupDriver(browser);
         }
 
-
+        // Method to setup appropriate driver
         public void SetupDriver(BrowserName browser)
         {
             Driver = GetDriver(browser);
@@ -51,7 +52,7 @@ namespace WebDriverFinalTask.Base
                 Driver.Quit();
 
                 // ... and start new test with new browser instance
-                SetupDriver(currentBrowser);
+                SetupDriver(_currentBrowser);
             }
         }
 
@@ -60,7 +61,7 @@ namespace WebDriverFinalTask.Base
         public void GlobalFixturesTearDown()
         {
             // Commented is global messages cleanup for all three accounts are used in tests
-            if(currentBrowser == BrowserName.Chrome)
+            if(_currentBrowser == BrowserName.Chrome)
             {
                 //List<KeyValuePair<string, string>> allTestAccounts = new List<KeyValuePair<string, string>>()
                 //{
@@ -90,7 +91,6 @@ namespace WebDriverFinalTask.Base
 
             Driver.Quit();
         }
-
 
         // Method for taking local screenshots
         public void TakeScreenshot()
